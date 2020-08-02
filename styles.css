@@ -1,169 +1,317 @@
-/**
-*  Publish Foundation theme
-*  Copyright (c) John Sundell 2019
-*  MIT license, see LICENSE file for details
-*/
+/* @group Let the browser know that we support both light and dark mode so that the website redraws when the user switches between these modes. */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+:root {
+    color-scheme: light dark;
 }
 
+/* @end */
+
+/* @group Typography */
+
+html {
+    -webkit-font-smoothing: antialiased;
+    font-size: 100%;
+}
 body {
-    background: #fff;
-    color: #000;
-    font-family: Helvetica, Arial;
-    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+  "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+  "Segoe UI Emoji", "Segoe UI Symbol";
+    font-weight: normal;
 }
 
-.wrapper {
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 40px;
-    text-align: left;
-}
-
-header {
-    background-color: #eee;
-}
-
-header .wrapper {
-    padding-top: 30px;
-    padding-bottom: 30px;
-    text-align: center;
-}
-
-header a {
-    text-decoration: none;
-}
-
-header .site-name {
-    font-size: 1.5em;
-    color: #000;
-    font-weight: bold;
-}
-
-nav {
-    margin-top: 20px;
-}
-
-nav li {
-    display: inline-block;
-    margin: 0 7px;
-    line-height: 1.5em;
-}
-
-nav li a.selected {
-    text-decoration: underline;
-}
-
-h1 {
-    margin-bottom: 20px;
-    font-size: 2em;
-}
-
-h2 {
-    margin: 20px 0;
-}
-
-p {
-    margin-bottom: 10px;
-}
+/* @end */
 
 a {
-    color: inherit;
-}
-
-.description {
-    margin-bottom: 40px;
-}
-
-.item-list > li {
-    display: block;
-    padding: 20px;
-    border-radius: 20px;
-    background-color: #eee;
-    margin-bottom: 20px;
-}
-
-.item-list > li:last-child {
-    margin-bottom: 0;
-}
-
-.item-list h1 {
-    margin-bottom: 15px;
-    font-size: 1.3em;
-}
-
-.item-list p {
-    margin-bottom: 0;
-}
-
-.tag-list {
-    margin-bottom: 15px;
-}
-
-.tag-list li,
-.tag {
-    display: inline-block;
-    background-color: #000;
-    color: #ddd;
-    padding: 4px 6px;
-    border-radius: 5px;
-    margin-right: 5px;
-}
-
-.tag-list a,
-.tag a {
     text-decoration: none;
+    word-break: break-word;
 }
-
-.item-page .tag-list {
-    display: inline-block;
+a:hover {
+    text-decoration: underline;
 }
-
-.content {
-    margin-bottom: 40px;
+em {
+    font-style: normal;
 }
-
-.browse-all {
+code {
+    border: none;
+    font-family: "SFMono", monospace;
+    font-size: 1rem;
+    line-height: 1.2em;
+    padding: 0 0.1em;
+}
+pre {
+    padding: 0.7em 0 0.6em 0;
+    margin: 0;
+}
+pre code {
+    font-family: monospace;
     display: block;
-    margin-bottom: 30px;
+    line-height: 1.4em;
+    overflow-x: auto;
+    padding: 0.2em 0.4em 0.3em 0.4em;
+    white-space: pre;
+}
+p {
+    padding: 0.6rem 0;
+    margin: 0
+}
+ul {
+    padding: 0.2em 0em 0.8em 1.8em;
+    margin: 0;
+}
+li {
+    padding: 0.6rem 0 0 0;
+    margin: 0
+}
+li p {
+    padding: 0.16rem 0 0 0;
+    margin: 0
+}
+header {
+    padding: 2em 0 0.7em 0;
+}
+h1 {
+    font-weight: 600;
+    font-size: 1.6rem;
+    line-height: 1.85rem;
+    padding: 0;
+    margin: 0;
+}
+h2 {
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.85rem;
+    padding: 0 0 1em 0;
+    margin: 0;
+}
+h3 {
+    font-weight: 600;
+    font-size: 1.3rem;
+    line-height: 1.55rem;
+    padding: 0;
+    margin: 2rem 0 1rem 0;
+}
+blockquote {
+    border-left-style: solid;
+    border-left-width: 4px;
 }
 
-.all-tags li {
-    font-size: 1.4em;
-    margin-right: 10px;
-    padding: 6px 10px;
+/* @group Round profile picture */
+
+img.profile {
+	border-color: transparent;
+	border-radius: 100%;
 }
 
-footer {
-    color: #8a8a8a;
+/* @end */
+
+/* @group Responsive fonts and margins */
+
+body {
+	color: #000;
+	font-family: "Main";
+	font-size: 1.1rem;
+	line-height: 1.4em;
+	-webkit-text-size-adjust: 100%;
 }
+img.profile {
+    margin: 14em 0 3em 0;
+    width: 6em;
+    height: 6em;
+}
+blockquote {
+    padding: 0 0.3em 0 0.8em;
+    margin: 0.6em 0;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: .001dpcm) {
+    body {
+        font-size: 1.1rem;
+        line-height: 1.4em;
+    }
+    h1 {
+	    font-size: 1.45rem;
+	    line-height: 1.6rem;
+    }
+	h2 { 
+	    font-size: 1.4rem;
+	    line-height: 1.6rem;
+	}
+    img.profile {
+        margin: 6em 0 2em 0;
+        width: 5em;
+        height: 5em;
+    }
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: .001dpcm) {
+    body {
+        font-size: 1.05rem;
+        line-height: 1.4em;
+    }
+    h1 { 
+	    font-size: 1.3rem;
+	    line-height: 1.5rem;
+    }
+	h2 { 
+	    font-size: 1.3rem;
+	    line-height: 1.5rem;
+	}
+	h3 { 
+	    font-size: 1.2rem;
+	    line-height: 1.35rem;
+	}
+    img.profile {
+        margin: 4em 0 2em 0;
+        width: 4em;
+        height: 4em;
+    }
+}
+
+/* @end */
+
+/* @group Width of content and images
+
+    * The content is no wider than 600 px
+    * Images can get wider than that (up to 1280px) but are always centered
+    * 2vw is the minimum horizontal margin
+*/
+
+body {
+    max-width: 800px;	
+    margin: 0 2vw;
+}
+img {
+    display: block;
+    max-width: 100%;
+    margin: 0.7em 0;
+}
+@media (min-width: 620px) {
+    body {
+        margin: 0 auto 6rem auto;
+    }
+}
+
+/* @end */
+
+/* @group Light colors */
+
+body {
+    background-color: #fff;
+    color: #292929;
+}
+em {
+    background-color: rgba(255, 255, 0, 0.20);
+}
+h1 {
+    color: #2d2d2d;
+}
+header h1 {
+    color: #333;
+}
+header h2 {
+    color: #505050;
+}
+header h3:before {
+    background: #bbb;
+}
+hr {
+    background: #bbb;
+    max-width: none;
+}
+a {
+    color: rgb(3, 102, 214);
+}
+a:hover {
+    color: #2200CC;
+}
+blockquote {
+    background-color: #f9f9f9;
+    color: #000;
+    border-left-color: #b0b0b0;
+}
+code {
+    background-color: #f0f0f0;
+    color: #000;
+}
+pre { background-color: #fff; }
+pre code { background-color: #f9f9f9; }
+pre code .keyword { color: #9b2393; }
+pre code .type { color: #0b4f79; }
+pre code .call { color: #326d74; }
+pre code .property { color: #326d74; }
+pre code .number { color: #1c00cf; }
+pre code .string { color: #c41a16; }
+pre code .comment { color: #5d6c79; }
+pre code .dotAccess { color: #326d74; }
+pre code .preprocessing { color: #643820; }
+
+/* @end */
+
+/* @group Dark colors */
 
 @media (prefers-color-scheme: dark) {
     body {
-        background-color: #222;
+        background-color: #303030;
+        color: #e0e0e0;
     }
-
-    body,
-    header .site-name {
-        color: #ddd;
+    header h1 {
+        color: #e0e0e0;
     }
-
-    .item-list > li {
-        background-color: #333;
+    header h2 {
+        color: #b8b8b8;
     }
-
-    header {
-        background-color: #000;
+    header h3:before {
+        background: #777;
     }
+    a {
+        color: rgba(84, 130, 255, 0.84);
+    }
+    a:hover {
+        color: rgb(84, 130, 255);
+    }
+    em {
+        background-color: rgba(255, 255, 0, 0.17);
+    }
+    hr {
+        background: #777;
+    }
+    blockquote {
+        background-color: #292929;
+        color: #e3e3e3;
+        border-left-color: #1f1f1f;
+    }
+    code {
+        background-color: inherit;
+        color: rgba(208, 168, 255, 0.88);
+    }
+    kbd {
+        background-color: rgb(40, 40, 40);
+        border-color: rgba(18, 18, 18, 0.9);
+        color: rgb(250, 250, 250);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }    
+    pre { background-color: #1f1f24; }
+    pre code { background-color: #1f1f24; }
+    pre code .keyword { color: #fc5fA3; }
+    pre code .type { color: #5dd8ff; }
+    pre code .call { color: #67b7a4; }
+    pre code .property { color: #67b7a4; }
+    pre code .number { color: #d0bf69; }
+    pre code .string { color: #fc6a5d; }
+    pre code .comment { color: #6c7986; }
+    pre code .dotAccess { color: #67b7a4; }
+    pre code .preprocessing { color: #fd8f3f; }
 }
 
-@media(max-width: 600px) {
-    .wrapper {
-        padding: 40px 20px;
-    }
+/* @end */
+
+/* @group Flash the posts list when scrolling to it the first time */
+
+#posts:target {
+    animation: flash 2s;
 }
+@keyframes flash {
+   from { background: rgba(254, 255, 0, 0.40); }
+   to { background: transparent; }
+}
+
+/* @end */
