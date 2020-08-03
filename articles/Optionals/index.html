@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="og:site_name" content="Swift Blog by Sebastian Vieira"/>
+		<link rel="canonical" href="https://seviu.github.io/articles/Optionals"/>
+		<meta name="twitter:url" content="https://seviu.github.io/articles/Optionals"/>
+		<meta name="og:url" content="https://seviu.github.io/articles/Optionals"/>
+		<title>Optionals | Swift Blog by Sebastian Vieira</title>
+		<meta name="twitter:title" content="Optionals | Swift Blog by Sebastian Vieira"/>
+		<meta name="og:title" content="Optionals | Swift Blog by Sebastian Vieira"/>
+		<meta name="description" content="Diving into Optionals (WIP)"/>
+		<meta name="twitter:description" content="Diving into Optionals (WIP)"/>
+		<meta name="og:description" content="Diving into Optionals (WIP)"/>
+		<meta name="twitter:card" content="summary"/>
+		<link rel="stylesheet" href="/styles.css" type="text/css"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<link rel="shortcut icon" href="/images/favicon.png" type="image/png"/>
+		<link rel="alternate" href="/feed.rss" type="application/rss+xml" title="Subscribe to Swift Blog by Sebastian Vieira"/>
+	</head>
+	<body class="item-page">
+		<header>
+			<div class="wrapper">
+				<a class="site-name" href="/">
+					<img class="logo"/>
+				</a>
+				<h4>Blog about the Swift programming language</h4>
+				<nav>
+					<ul>
+						<li class="selected">
+							<a href="/articles">Articles</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</header>
+		<div class="wrapper">
+			<article>
+				<div class="content"><p>In this article we will dive a little bit into Optionals.</p><pre><code><span class="keyword">@frozen enum</span> Optional&lt;Wrapped&gt;
+</code></pre><p>This took me by surprise a while back. Probably all seasoned Swift developers already know, but an Optional is just an enum.</p><blockquote><p>An Optional is a type that represents either a wrapped value or nil, the absence of a value.</p></blockquote><p>Since it is an enum, we could just declare it as <code>Optional&lt;MyClass&gt;</code> instead of as <code>MyClass?</code></p><p>Actually we can also see how Optional is declared in the standard library:</p><pre><code><span class="keyword">enum</span> Optional&lt;Wrapped&gt; : <span class="type">ExpressibleByNilLiteral</span> {
+    <span class="comment">/// The absence of a value.
+    ///
+    /// In code, the absence of a value is typically written using the `nil`
+    /// literal rather than the explicit `.none` enumeration case.</span>
+    <span class="keyword">case</span> none
+
+    <span class="comment">/// The presence of a value, stored as `Wrapped`.</span>
+    <span class="keyword">case</span> some(<span class="type">Wrapped</span>)
+}
+</code></pre><p>We could dive even a bit further and check what <code>ExpressibleByNilLiteral</code> is, which is a type that can be initialized using the nil literal. Only the Optional type conforms to it and it is discouraged to be used in other places.</p><p>This protocol hides unnecesary implementation details. It is what lets us assign nil to an optional. There are more ExpressibleBy protocols out there. To dive more into it I recommend you to read this article:</p><p><a href="https://swiftrocks.com/swift-expressibleby-protocols-how-they-work-internally-in-the-compiler.html">Swift ExpressibleBy protocols</a></p><h2>.none</h2><p><code>Optional&lt;Wrapped&gt;.none</code> is equivalent to the <code>nil</code> literal. The difference is that <code>nil</code> is a constant having <code>.none</code> as value. To go even further we can say that <code>nil</code> is of type <code>Optional&lt;Wrapped&gt;</code> .</p><h2>Optional Binding</h2><p>Optionals are a great to avoid cases in which you are dealing with <code>nil</code>. Most of the times we will conditionally bind the wrapped value of an Optional into a new variable with</p><p><code>if let</code>, <code>guard let</code>, and <code>switch</code></p><pre><code><span class="keyword">if let</span> someConstant = someOptional {
+    <span class="call">print</span>(someConstant) 
+} <span class="keyword">else</span> {
+    <span class="call">print</span>(<span class="string">"someOptional is nil..."</span>)
+}
+</code></pre><p>If we want to avoid the <code>if else</code> statement and we just want to unwrap our optional we can always do the following:</p><pre><code><span class="keyword">guard let</span> someConstant = someOptional <span class="keyword">else</span> { <span class="keyword">return</span> }
+<span class="call">print</span>(someConstant)
+<span class="comment">// ...</span>
+</code></pre><p>Or even with a switch statement</p><pre><code><span class="keyword">switch</span> someOptional {
+    <span class="keyword">case let</span> someConstant:
+        <span class="call">print</span>(someConstant)
+    <span class="keyword">default</span>:
+        <span class="call">print</span>(<span class="string">"someOptional is nil..."</span>)
+}
+</code></pre><h2>Optional Chaining</h2><p>If we want to access the value of an optional without crashing our code we can use the postfix optional chaining operator or <code>?</code></p><pre><code><span class="keyword">var</span> str:<span class="type">Optional</span>&lt;<span class="type">String</span>&gt; = <span class="string">"Hello World"</span>
+<span class="call">print</span>(str.<span class="call">uppercased</span>())
+</code></pre><p>This code will fail with the following error message: <code>Value of optional type 'Optional&lt;String&gt;' must be unwrapped to refer to member 'uppercased' of wrapped base type 'String'</code></p><p>To fix it we can use <code>?</code></p><pre><code><span class="keyword">var</span> str:<span class="type">Optional</span>&lt;<span class="type">String</span>&gt; = <span class="string">"Hello World"</span>
+<span class="call">print</span>(str?.<span class="call">uppercased</span>())
+</code></pre><p>And now we get a warning: <code>Expression implicitly coerced from 'String?' to 'Any'</code> what happens is that we are printing <code>Optional("HELLO WORLD")</code>. To fix this we have three choices:</p><p>Provide a default value to avoid this warning Force-unwrap the value to avoid this warning Explicitly cast to 'Any' with 'as Any' to silence this warning<br>Providing a default value sounds like a great idea!</p><h2>The Nil-Coalescing Operator</h2><p>When printing <code>HELLO WORLD</code> we do not want it to be wrapped by <code>Optional()</code>. Moreover we want to get rid of our warning. We could use <code>Optional binding</code> for this, but there is a better way. The The Nil-Coalescing Operator or <code>??</code></p><pre><code><span class="keyword">var</span> str:<span class="type">Optional</span>&lt;<span class="type">String</span>&gt; = <span class="string">"Hello World"</span>
+<span class="call">print</span>(str?.<span class="call">uppercased</span>() ?? <span class="string">""</span>)
+</code></pre><p>We use <code>??</code> to supply a default value in case the <code>Optional</code> instance is <code>nil</code>. It can even be chained:</p><pre><code><span class="call">print</span>(str1 ?? str2 ?? str3 ?? <span class="string">"str and str2 and str3 are all nil"</span>)
+</code></pre><h2>Unconditional Unwrapping</h2><p>TBD</p><h2>map and flatMap</h2><p>TBD</p><h2>Playground</h2><p><a href="https://github.com/seviu/swiftdaddy/tree/master/Playgrounds/Optional.playground">Optional Playground</a></p></div>
+				<br/>
+				<br/>
+				<p>Published on 2020-08-03 09:41:00 +0000</p>
+				<span>Tagged with: </span>
+				<ul class="tag-list">
+					<li>
+						<a href="/tags/swift">Swift</a>
+					</li>
+				</ul>
+			</article>
+		</div>
+		<footer>
+			<p>This website was made in Swift thanks to 
+				<a href="https://github.com/johnsundell/ink">Ink</a>, 
+				<a href="https://github.com/johnsundell/plot">Plot</a>, 
+				<a href="https://github.com/johnsundell/splash">Splash</a> &amp; 
+				<a href="https://github.com/johnsundell/publish">Publish</a> by 
+				<a href="https://www.swiftbysundell.com">John Sundell</a>
+			</p>
+			<p>©2020 Sebastian Vieira</p>
+			<p>
+				<a class="rss" href="/feed.rss">RSS</a>
+			</p>
+		</footer>
+	</body>
+</html>
