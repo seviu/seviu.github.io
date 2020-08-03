@@ -36,7 +36,7 @@
 		</header>
 		<div class="wrapper">
 			<article>
-				<div class="content"><p>In this article we will dive a little bit into Optionals.</p><pre><code><span class="keyword">@frozen enum</span> Optional&lt;Wrapped&gt;
+				<div class="content"><h2>Diving into Optionals</h2><p>In this article we will dive a little bit into Optionals.</p><pre><code><span class="keyword">@frozen enum</span> Optional&lt;Wrapped&gt;
 </code></pre><p>This took me by surprise a while back. Probably all seasoned Swift developers already know, but an Optional is just an enum.</p><blockquote><p>An Optional is a type that represents either a wrapped value or nil, the absence of a value.</p></blockquote><p>Since it is an enum, we could just declare it as <code>Optional&lt;MyClass&gt;</code> instead of as <code>MyClass?</code></p><p>Actually we can also see how Optional is declared in the standard library:</p><pre><code><span class="keyword">enum</span> Optional&lt;Wrapped&gt; : <span class="type">ExpressibleByNilLiteral</span> {
     <span class="comment">/// The absence of a value.
     ///
