@@ -72,10 +72,11 @@
 <span class="call">print</span>(str!)
 </code></pre><p>Using <code>!</code> on a nil instance will definitely crash your app with a runtime error.</p><h2>map and flatMap</h2><p>A favourite of mine, this one can scratch some heads. <code>Optional</code> defines <code>map</code> and <code>flatMap</code> and they are incredibly useful. Used properly they can greatly simplify your code and make it more concise.</p><pre><code><span class="keyword">func</span> flatMap&lt;U&gt;(<span class="keyword">_</span> transform: (<span class="type">Wrapped</span>) <span class="keyword">throws</span> -&gt; <span class="type">U</span>?) <span class="keyword">rethrows</span> -&gt; <span class="type">U</span>?
 <span class="keyword">func</span> map&lt;U&gt;(<span class="keyword">_</span> transform: (<span class="type">Wrapped</span>) <span class="keyword">throws</span> -&gt; <span class="type">U</span>) <span class="keyword">rethrows</span> -&gt; <span class="type">U</span>?
-</code></pre><p><code>flatMap</code> should be used with a closure that returns an optional whereas <code>map</code> should be with a method that returns a non-optional value. In the following method our maps return an optionals. flatMap will combine it with the existing one and map will keep them both.</p><pre><code><span class="keyword">let</span> meaningoflifeString: <span class="type">String</span>? = <span class="string">"42"</span>
+</code></pre><p><code>flatMap</code> should be used with a closure that returns an optional whereas <code>map</code> should be with a method that returns a non-optional value. Would map return an optional, it will wrap with an optional.</p><pre><code><span class="keyword">let</span> meaningoflifeString: <span class="type">String</span>? = <span class="string">"42"</span>
 <span class="keyword">let</span> mapMeaningoflife = meaningoflifeString.<span class="call">map</span> { <span class="type">Int</span>($0) }
 <span class="keyword">let</span> flatMapMeaningoflife = meaningoflifeString.<span class="call">flatMap</span> { <span class="type">Int</span>($0) }
-<span class="call">print</span>(<span class="string">"map</span> \(mapMeaningoflife) <span class="string">or flat</span> \(flatMapMeaningoflife)<span class="string">?"</span>)
+<span class="call">print</span>(<span class="string">"map</span> \(mapMeaningoflife) <span class="string">or flat</span> \(flatMapMeaningoflife)<span class="string">"</span>)
+<span class="comment">// prints map Optional(Optional(42)) or flat Optional(42)\n"</span>
 </code></pre><h2>Playground</h2><p><a href="https://github.com/seviu/swiftdaddy/tree/master/Playgrounds/Optional.playground">Optional Playground</a></p></div>
 				<br/>
 				<br/>
