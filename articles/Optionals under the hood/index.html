@@ -39,7 +39,7 @@
 		</header>
 		<div class="wrapper">
 			<article>
-				<div class="content"><h2>Diving into Optionals</h2><p>In this article, we will dive a little bit into Optionals. We will start this with the following statement:</p><p><strong>Optionals are enums.</strong></p><p>This can take you by surprise. However, once you start diving into it, everything starts making sense.</p><pre><code><span class="keyword">@frozen enum</span> Optional&lt;Wrapped&gt;
+				<div class="content"><p>In this article, we will dive a little bit into Optionals. We will start this with the following statement:</p><p><strong>Optionals are enums.</strong></p><p>This can take you by surprise. However, once you start diving into it, everything starts making sense.</p><pre><code><span class="keyword">@frozen enum</span> Optional&lt;Wrapped&gt;
 </code></pre><p><em>An Optional is a type that represents either a wrapped value or nil, the absence of a value.</em></p><p>Usually, optionals are defined with a question mark <code>?</code>, but since we now know it is an enum, we might declare it as such: <code>Optional&lt;MyClass&gt;</code> instead of as <code>MyClass?</code></p><p>For this tutorial I just saw how Optional is declared in the standard library:</p><pre><code><span class="keyword">enum</span> Optional&lt;Wrapped&gt; : <span class="type">ExpressibleByNilLiteral</span> {
     <span class="comment">/// The absence of a value.
     ///
