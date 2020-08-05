@@ -31,6 +31,8 @@
     --navigation-items-text-color: #ffffff;
     --hover-color: #e4eaf5;
     --video-background-color: #ffffff;
+    --website-link-text-color: #050505;
+    --website-link-text-hover-color: #2183be;
 }
 .logo {
 	content: url(/images/swiftdaddy.png);
@@ -54,6 +56,8 @@
         --navigation-items-text-color: #eeeeee;
         --hover-color: #6e5773;
         --video-background-color: #ffffff;
+        --website-link-text-color: #dfdfdf;
+        --website-link-text-hover-color: #504c52;
     }
 }
 
@@ -130,12 +134,12 @@ div.introduction h1 {
 }
 
 a {
-    color: inherit;
+    color: var(--website-link-text-color);
     text-decoration: none;
 }
 
 a:hover {
-    color: var(--header-color);
+    color: var(--website-link-text-hover-color);
     text-decoration: none;
 }
 
