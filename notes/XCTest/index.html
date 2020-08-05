@@ -40,12 +40,12 @@
 		<div class="wrapper">
 			<article>
 				<div class="content"><h2>XCTest Tips and Tricks</h2><p>Some tips and tricks I have come across by running XCTest which I thought might be helpful</p><h2>Print the accessibility tree</h2><p>If you want to know which elements are there it is just as easy as put a breakpoint where you are having issues and run the following:</p><pre><code>po <span class="call">print</span>(<span class="type">XCUIApplication</span>().<span class="property">debugDescription</span>)
-</code></pre><h2>Element not found?</h2><p>If an element is not found it is maybe because you configured any of its super views with an accessibility identifier.</p><p>Once a view has an accessibility identifier set then subviews will not be visible in the accessibility tree.</p><p>If they are not visible you will not be able to fetch them.</p><h2>Clear the data of your app before running the tests</h2><p>XCTest has a variable called <code>launchArguments</code>. You can pass an argument that your AppDelegate will be able to pick up on start (or any other part of your code)</p><p>On <code>willFinishLaunchingWithOptions</code>just query for this argument and if it is a XCTest then proceed to clean up your app:</p><pre><code><span class="preprocessing">#if DEBUG</span>
-  <span class="keyword">if</span> <span class="type">ProcessInfo</span>.<span class="property">processInfo</span>.<span class="property">arguments</span>.<span class="call">contains</span>(<span class="string">"XCTest"</span>) {
-    <span class="comment">// cleanup NSDocumentDirectory, disable animations etc...</span>
-  }
+</code></pre><h2>Element not found?</h2><p>If an element is not found it is maybe because you marked any of its superviews has an accesibility identifier Once a view has an accesibility identifier set then subviews will not be visible in the accesibility tree.</p><p>If they are not visible you will not be able to fetch them.</p><h2>Clear the data of your app before running the tests</h2><p>XCTest has a variable called <code>launchArguments</code>. You can pass an argument that your AppDelegate will be able to pick up on start (or any other part of your code)</p><p>On <code>willFinishLaunchingWithOptions</code>just query for this argument and if it is a XCTest then proceed to clean up your app:</p><pre><code><span class="preprocessing">#if DEBUG</span>
+	<span class="keyword">if</span> <span class="type">ProcessInfo</span>.<span class="property">processInfo</span>.<span class="property">arguments</span>.<span class="call">contains</span>(<span class="string">"XCTest"</span>) {
+	<span class="comment">// cleanup NSDocumentDirectory, disable animations etc...</span>
+	}
 <span class="preprocessing">#endif</span>
-</code></pre><blockquote><p>Tip: If you have problems with legacy code and table/collection views, try to reloadData:</p></blockquote></div>
+</code></pre><blockquote><p>Tip: If you have problems with legacy code and table / collection views, try to reloadData:</p></blockquote></div>
 				<br/>
 				<br/>
 				<p>Published on 2020-08-03 09:41:00 +0000</p>
