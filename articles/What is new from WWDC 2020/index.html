@@ -44,7 +44,7 @@
 	(<span class="keyword">_</span>, name: <span class="type">String</span>, callback) <span class="keyword">in</span>
 		<span class="call">callback</span>(.<span class="call">success</span>(<span class="string">"Hello,</span> \(name)<span class="string">!"</span>)) 
 }
-</code></pre><p>Having experience in AWS I cannot stress how happy I am that I can now add Swift to the set of programming languages I can use. Bye, bye typescript.</p><h3>Enum Improvements</h3><p>&nbsp;</p><p><strong>Synthesized Comparable Conformance For enum Types</strong></p><p>From Swift 5.3 Comparable will also be included, allowing for easy sorting by the order of declaration.</p><p><strong>Enum Cases As Protocol Witnesses</strong></p><p>We can now allow for static protocol requirements to be witnessed by an enum case. In other words: it is possible to conform enum for a protocols so that it fulfills <code>static var</code> and <code>static func</code> protocol requirements.</p><pre><code>		<span class="keyword">protocol</span> ErrorReportable {
+</code></pre><p>Having experience in AWS I cannot stress how happy I am that I can now add Swift to the set of programming languages I can use. Bye, bye typescript.</p><h3>Enum Improvements</h3><p>&nbsp;</p><p><strong>Synthesized Comparable Conformance For enum Types</strong></p><p>From Swift 5.3 Comparable will also be included, allowing for easy sorting by the order of declaration.</p><p><strong>Enum Cases As Protocol Witnesses</strong></p><p>We can now allow for static protocol requirements to be witnessed by an enum case. In other words: it is possible to conform enum for a protocols so that it fulfills <code>static var</code> and <code>static func</code> protocol requirements.</p><pre><code><span class="keyword">protocol</span> ErrorReportable {
     <span class="keyword">static var</span> notFound: <span class="type">Self</span> { <span class="keyword">get</span> }
     <span class="keyword">static func</span> invalid(searchTerm: <span class="type">String</span>) -&gt; <span class="type">Self</span>
 }
@@ -53,7 +53,15 @@
     <span class="keyword">case</span> notFound
     <span class="keyword">case</span> invalid(searchTerm: <span class="type">String</span>)
 }
-</code></pre><h3>Multiple Trailing Closures</h3><pre><code><span class="type">UIView</span>.<span class="call">animate</span>(withDuration: <span class="number">0.3</span>) { 
+</code></pre><p>Before all this, because enum cases are not considered as a "witness" for static protocol requirement, we had to write implementations such as:</p><pre><code><span class="keyword">enum</span> UserrError: <span class="type">ErrorReportable</span> {
+  <span class="keyword">case</span> _notFound
+  <span class="keyword">case</span> _invalid(searchTerm: <span class="type">String</span>) -&gt; <span class="type">Self</span>
+  <span class="keyword">static var</span> notFound: <span class="type">Self</span> { <span class="keyword">return</span> .<span class="dotAccess">_notFound</span> }
+  <span class="keyword">static func</span> invalid(searchTerm: <span class="type">String</span>) -&gt; <span class="type">Self</span> {
+    <span class="keyword">return</span> .<span class="call">_invalid</span>(searchTerm: searchTerm)
+  }
+}
+</code></pre><p>This does not really make much sense since enum cases behave like if they were <em>static</em> and matching should happen automatically.</p><p>There are some limitations. It is better to read the original proposal:</p><p><a href="https://github.com/apple/swift-evolution/blob/master/proposals/0280-enum-cases-as-protocol-witnesses.md">Enum Cases as Protocol Witnesses</a></p><h3>Multiple Trailing Closures</h3><p>Before Swift 5.3 we could only have a trailing closure. Now it is possible to concatenate them. This makes the code simpler and easier to read.</p><pre><code><span class="type">UIView</span>.<span class="call">animate</span>(withDuration: <span class="number">0.3</span>) { 
     <span class="keyword">self</span>.<span class="property">view</span>.<span class="property">alpha</span> = <span class="number">0</span> 
 } completion: { <span class="keyword">_ in 
     self</span>.<span class="property">view</span>.<span class="call">removeFromSuperview</span>()
