@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="og:site_name" content="Swiftdaddy"/>
+		<link rel="canonical" href="https://seviu.github.io/baking/Associated%20Types%20and%20Protocols"/>
+		<meta name="twitter:url" content="https://seviu.github.io/baking/Associated%20Types%20and%20Protocols"/>
+		<meta name="og:url" content="https://seviu.github.io/baking/Associated%20Types%20and%20Protocols"/>
+		<title>Associated Types and Protocols | Swiftdaddy</title>
+		<meta name="twitter:title" content="Associated Types and Protocols | Swiftdaddy"/>
+		<meta name="og:title" content="Associated Types and Protocols | Swiftdaddy"/>
+		<meta name="description" content="Protocols with Associated Types"/>
+		<meta name="twitter:description" content="Protocols with Associated Types"/>
+		<meta name="og:description" content="Protocols with Associated Types"/>
+		<meta name="twitter:card" content="summary"/>
+		<link rel="stylesheet" href="/styles.css" type="text/css"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<link rel="shortcut icon" href="/images/favicon.png" type="image/png"/>
+		<link rel="alternate" href="/feed.rss" type="application/rss+xml" title="Subscribe to Swiftdaddy"/>
+	</head>
+	<body>
+		<header>
+			<div class="wrapper">
+				<a class="site-name" href="/">
+					<img class="logo"/>
+				</a>
+				<h4>Blog about App development for iOS</h4>
+				<nav>
+					<ul>
+						<li>
+							<a href="/articles">Articles</a>
+						</li>
+						<li>
+							<a href="/notes">Notes</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</header>
+		<div class="wrapper"><h2>Understanding the problem</h2><p>While working in a problem with a colleague we came upon a problem in which it was necessary to transform one element into an array of something complex and totally different, and we decided to define a protocol for that. This was a pattern that we would have to use in the future anyway.</p><p>We would define a <code>Parser</code> which would transform our original object <code>Codable</code> into an array of complex elements <code>ComplexElement</code></p><h2>Our initial objects</h2><p>To simplify things we have an empty protocol <code>ComplexElement</code>, an <code>Element</code> which has an array of <code>String</code> and a <code>ComplexMessage</code> which adopts our <code>ComplexElement</code> protocol</p><pre><code><span class="keyword">protocol</span> ComplexElement { }
+
+<span class="keyword">protocol</span> Parser {
+	<span class="keyword">func</span> transform(data: <span class="type">Codable</span>?) -&gt; [<span class="type">ComplexElement</span>]
+}
+
+<span class="keyword">struct</span> Element: <span class="type">Codable</span> {
+	<span class="keyword">let</span> messages:[<span class="type">String</span>]
+}
+
+<span class="keyword">struct</span> ComplexMessage: <span class="type">ComplexElement</span> {
+	<span class="keyword">let</span> message: <span class="type">String</span>
+}
+</code></pre><p>And a protocol which defines our parser</p><pre><code><span class="keyword">protocol</span> Parser {
+	<span class="keyword">func</span> transform(data: <span class="type">Codable</span>?) -&gt; [<span class="type">ComplexElement</span>]
+}
+</code></pre><h2>First try</h2><p>At the beginning we just write a parser like this</p><pre><code><span class="keyword">struct</span> ElementParser: <span class="type">Parser</span> {
+	<span class="keyword">func</span> transform(data: <span class="type">Element</span>?) -&gt; [<span class="type">ComplexMessage</span>] {
+		<span class="keyword">return</span> []
+	}
+}
+</code></pre><p>Unfortunately this will fail. The Swift Compiler will show an error <code>Type 'ElementParser' does not conform to protocol 'Parser'</code> we can fix it this way</p><pre><code><span class="keyword">struct</span> ElementParser: <span class="type">Parser</span> {
+	<span class="keyword">func</span> transform(data: <span class="type">Codable</span>?) -&gt; [<span class="type">ComplexElement</span>] {
+		<span class="keyword">return</span> []
+	}
+}
+</code></pre><p>However we would like to use the original solution. This parser does not intend bklah for this</p><pre><code><span class="keyword">protocol</span> Parser {
+	<span class="keyword">associatedtype</span> Input: <span class="type">Codable</span>
+	<span class="keyword">associatedtype</span> Output: <span class="type">Codable</span>
+
+	<span class="keyword">func</span> transform(data: <span class="type">Input</span>?) -&gt; [<span class="type">Output</span>]
+}
+
+<span class="keyword">struct</span> Element: <span class="type">Codable</span> {
+	<span class="keyword">let</span> messages:[<span class="type">Message</span>]
+}
+
+<span class="keyword">struct</span> Message: <span class="type">Codable</span> {
+	<span class="keyword">let</span> message: <span class="type">String</span>
+}
+
+<span class="keyword">struct</span> ElementParser: <span class="type">Parser</span> {
+	<span class="keyword">typealias</span> Input = <span class="type">Element</span>
+	<span class="keyword">typealias</span> Output = <span class="type">Message</span>
+
+	<span class="keyword">func</span> transform(data: <span class="type">Element</span>?) -&gt; [<span class="type">Message</span>] {
+		<span class="keyword">return</span> []
+	}
+}
+</code></pre></div>
+		<footer>
+			<p>This website was made in Swift thanks to 
+				<a href="https://github.com/johnsundell/ink">Ink</a>, 
+				<a href="https://github.com/johnsundell/plot">Plot</a>, 
+				<a href="https://github.com/johnsundell/splash">Splash</a> &amp; 
+				<a href="https://github.com/johnsundell/publish">Publish</a> by 
+				<a class="rss" href="https://www.swiftbysundell.com">John Sundell</a>
+			</p>
+			<p>©2020 Sebastian Vieira</p>
+			<p>Subscribe via 
+				<a class="rss" href="/feed.rss">RSS</a>
+			</p>
+		</footer>
+	</body>
+</html>
