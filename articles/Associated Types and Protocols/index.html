@@ -9,9 +9,9 @@
 		<title>Associated Types and Protocols | Swiftdaddy</title>
 		<meta name="twitter:title" content="Associated Types and Protocols | Swiftdaddy"/>
 		<meta name="og:title" content="Associated Types and Protocols | Swiftdaddy"/>
-		<meta name="description" content="Protocols with Associated Types"/>
-		<meta name="twitter:description" content="Protocols with Associated Types"/>
-		<meta name="og:description" content="Protocols with Associated Types"/>
+		<meta name="description" content="Taking a look into Protocols and how we can use them with generic types in the form of Associated Types"/>
+		<meta name="twitter:description" content="Taking a look into Protocols and how we can use them with generic types in the form of Associated Types"/>
+		<meta name="og:description" content="Taking a look into Protocols and how we can use them with generic types in the form of Associated Types"/>
 		<meta name="twitter:card" content="summary"/>
 		<link rel="stylesheet" href="/styles.css" type="text/css"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -39,7 +39,7 @@
 		</header>
 		<div class="wrapper">
 			<article>
-				<div class="content"><h2>Understanding the problem</h2><p>While working in a problem with a colleague we came upon a problem in which it was necessary to transform one element into an array of something complex and totally different. Since this was a pattern which was going to repeat itself, we defined a protocol for that.</p><p>The problem itself required us to have a <code>Parser</code> which would transform some json into an array of core data elements. Lets name them <code>Element</code> and <code>ComplexElement</code></p><h2>Our setup</h2><p>We have a Parser which transforms some <code>Codable</code> into an array of <code>ComplexObject</code>.</p><pre><code><span class="keyword">protocol</span> Parser {
+				<div class="content"><h2>Understanding the problem</h2><p>While working in a problem with a colleague we came upon a problem in which it was necessary to transform one element into an array of something complex and different. Since this was a pattern that was going to repeat itself, we defined a protocol for that.</p><p>The problem itself required us to have a <code>Parser</code> which would transform some JSON into an array of core data elements. Lets name them <code>Element</code> and <code>ComplexElement</code></p><h2>Our setup</h2><p>We have a Parser that transforms some <code>Codable</code> into an array of <code>ComplexObject</code>.</p><pre><code><span class="keyword">protocol</span> Parser {
 	<span class="keyword">func</span> transform(data: <span class="type">Codable</span>?) -&gt; [<span class="type">ComplexObject</span>]
 }
 </code></pre><p>What we want to achieve here is to transform <code>JsonElement</code> (which is <code>Codable</code>) into <code>ComplexMessage</code> (which is <code>ComplexObject</code>)</p><pre><code><span class="keyword">struct</span> JsonElement: <span class="type">Codable</span> {
@@ -59,7 +59,7 @@
 		<span class="keyword">return</span> []
 	}
 }
-</code></pre><p>This still does not feel right. We really would like to specify the types of our <code>Codable</code> and our <code>ComplexObject</code></p><h3>associatedtype to the rescue</h3><p>To achieve this we can use Associated Types or <code>associatedtype</code>. An associated type is a placeholder whith a keyword which can be defined with <code>typealias</code> when implementing the protocol.</p><p>Associated types can have constraints. In our example we just want them to be of type <code>Codable</code> and <code>ComplexObject</code></p><pre><code><span class="keyword">protocol</span> Parser {
+</code></pre><p>This still does not feel right. We really would like to specify the types of our <code>Codable</code> and our <code>ComplexObject</code></p><h3>associatedtype to the rescue</h3><p>To achieve this we can use Associated Types or <code>associatedtype</code>. An associated type is a placeholder with a keyword that can be defined with <code>typealias</code> when implementing the protocol.</p><p>Associated types can have constraints. In our example we just want them to be of type <code>Codable</code> and <code>ComplexObject</code></p><pre><code><span class="keyword">protocol</span> Parser {
 	<span class="keyword">associatedtype</span> Input: <span class="type">Codable</span>
 	<span class="keyword">associatedtype</span> Output: <span class="type">ComplexObject</span>
 
@@ -75,7 +75,7 @@
 		<span class="keyword">return</span> []
 	}
 }
-</code></pre><p>And that’s it. There is not really a lot of magic around associated types. They are just placeholders we can just fill with a <code>typealias</code>.</p></div>
+</code></pre><p>And that’s it. There is not a lot of magic around associated types. They are just placeholders we can just fill with a <code>typealias</code>.</p></div>
 				<br/>
 				<br/>
 				<p>Published on August 30, 2020</p>
