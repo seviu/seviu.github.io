@@ -39,7 +39,7 @@
 		</header>
 		<div class="wrapper">
 			<article>
-				<div class="content"><h2>Properties, properties, properties!!!</h2><p>Swift lets you initialize properties in multiple ways. This article quickly goes through all different permutations var/let/static allowed.</p><p>Let's start with a very simple struct with methods that <code>print</code> themselves and return a constant with a different string each. And lets try all permutations:</p><pre><code><span class="keyword">struct</span> PropertyTest {
+				<div class="content"><h2>Properties, properties, properties!!!</h2><p>Swift lets you initialize properties in multiple ways. This article quickly goes through all different permutations var/let/static allowed.</p><p>Let's start with a very simple struct. This struct declares all kinds of properties. Each one executes a <code>print</code> statement and returns a constant with a different string each.</p><pre><code><span class="keyword">struct</span> PropertyTest {
 	<span class="keyword">var</span> prop1: <span class="type">String</span> {
 		<span class="call">print</span>(<span class="string">"- computing1..."</span>)
 		<span class="keyword">return</span> <span class="string">"prop1"</span> + <span class="keyword">#function</span>
@@ -105,7 +105,7 @@
 //		return #function
 //	}()</span>
 }
-</code></pre><p>First of all, some methods are commented with the error code. The most interesting one is the one that states that <code>lazy must not be used on an already-lazy global</code>. This means that statics are lazy by default. We will talk about it when we look into <code>prop8</code> and <code>prop11</code></p><h2>Lets initialize our struct</h2><pre><code><span class="keyword">var</span> test = <span class="type">PropertyTest</span>()
+</code></pre><h2>errors, errors!</h2><p>Some methods are commented with a compile error code. The most interesting one is the one that states that <code>lazy must not be used on an already-lazy global</code>. This means that statics are lazy by default. We will talk about it when we look into <code>prop8</code></p><h2>Lets initialize our struct</h2><pre><code><span class="keyword">var</span> test = <span class="type">PropertyTest</span>()
 
 &gt; - computing2...
 &gt; - computing5...
@@ -182,9 +182,24 @@
 
 <span class="call">print</span>(<span class="type">PropertyTest</span>.<span class="property">prop11</span>)
 &gt; prop11PropertyTest
-</code></pre><p><code>prop11</code>, like <code>prop8</code>, is an immutable <strong>stored property</strong></p><h2>var vs let PropertyTest()</h2><p>Something interesting happens when we declare test as immutable</p><pre><code><span class="keyword">let</span> test = <span class="type">PropertyTest</span>()
-</code></pre><p>If we do this then we cannot access our lazy property, <code>prop3</code>.</p><pre><code><span class="call">print</span>(test.<span class="property">prop3</span>)  -&gt;  !!! <span class="type">Cannot</span> use <span class="keyword">mutating</span> getter on immutable value: 'test' <span class="keyword">is</span> a '<span class="keyword">let</span>' constant
-</code></pre><p><strong>lazy stored properties</strong> are mutating and <code>test</code> is now a constant. Since we are dealing with a struct here, which is a value type, if we declare it as a constant, we cannot access any lazy property it might have declared, as it would mean we are changing <code>test</code>.</p><h2>initializing</h2><p>We have seen that we can change the value of stored properties. What happens when we do that on <code>prop8</code> which is static and lazy?</p><pre><code><span class="type">PropertyTest</span>.<span class="property">prop8</span> = <span class="string">"8"</span>
+</code></pre><p><code>prop11</code>, like <code>prop8</code>, is an immutable <strong>stored property</strong></p><h2>lazy vs struct</h2><p>Something interesting happens when we declare test as a const</p><pre><code><span class="keyword">let</span> test = <span class="type">PropertyTest</span>()
+</code></pre><p>If we want to access our lazy property, <code>prop3</code>, the code will not compile</p><pre><code><span class="call">print</span>(test.<span class="property">prop3</span>)  -&gt;  !!! <span class="type">Cannot</span> use <span class="keyword">mutating</span> getter on immutable value: 'test' <span class="keyword">is</span> a '<span class="keyword">let</span>' constant
+</code></pre><p>What is this madness? Why does it not compile anymore?</p><p>The answer could not be easier: <strong>lazy stored properties</strong> are mutating and <code>test</code> is now a constant. Since we are dealing with a struct here, which is a value type, if we declare it as a constant, we cannot access any lazy property it might have declared, as it would mean we are changing <code>test</code>.</p><p>But there is more...</p><pre><code><span class="keyword">var</span> test = <span class="type">PropertyTest</span>()
+<span class="keyword">var</span> test1 = test
+
+<span class="call">print</span>(test1.<span class="property">prop3</span>)
+&gt; computing3...
+&gt; prop3prop3
+
+<span class="call">print</span>(test.<span class="property">prop3</span>)
+&gt; computing3...
+&gt; prop3prop3
+
+
+<span class="keyword">var</span> test2 = test
+<span class="call">print</span>(test2)
+&gt; prop3prop3
+</code></pre><p><code>test1</code> is a copy of <code>test</code> before calling <code>prop3</code> therefore <code>pop3</code> is initialized both for <code>test1</code> and <code>test</code>...</p><p>...but <code>test2</code> is a copy of <code>test</code> after <code>prop3</code> has been lazily initialized, and when accessing it, it is using a cached value from <code>test</code>.</p><h2>initializing</h2><p>We have seen that we can change the value of stored properties. What happens when we do that on <code>prop8</code> which is static and lazy?</p><pre><code><span class="type">PropertyTest</span>.<span class="property">prop8</span> = <span class="string">"8"</span>
 &gt; - computing8...
 
 <span class="call">print</span>(test.<span class="property">prop8</span>)
