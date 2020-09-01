@@ -1,4 +1,154 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content"><channel><title>Swiftdaddy</title><description>Blog about App development for iOS</description><link>https://seviu.github.io/</link><language>en</language><lastBuildDate>Tue, 1 Sep 2020 05:49:44 +0000</lastBuildDate><pubDate>Tue, 1 Sep 2020 05:49:44 +0000</pubDate><ttl>250</ttl><atom:link href="https://seviu.github.io/feed.rss" rel="self" type="application/rss+xml"/><item><guid isPermaLink="true">https://seviu.github.io/articles/Associated%20Types%20and%20Protocols</guid><title>Associated Types and Protocols</title><description>Taking a look into Protocols and how we can use them with generic types in the form of Associated Types</description><link>https://seviu.github.io/articles/Associated%20Types%20and%20Protocols</link><pubDate>Sun, 30 Aug 2020 09:41:00 +0000</pubDate><content:encoded><![CDATA[<h2>Understanding the problem</h2><p>While working in a problem with a colleague we came upon a problem in which it was necessary to transform one element into an array of something complex and different. Since this was a pattern that was going to repeat itself, we defined a protocol for that.</p><p>The problem itself required us to have a <code>Parser</code> which would transform some JSON into an array of core data elements. Lets name them <code>Element</code> and <code>ComplexElement</code></p><h2>Our setup</h2><p>We have a Parser that transforms some <code>Codable</code> into an array of <code>ComplexObject</code>.</p><pre><code><span class="keyword">protocol</span> Parser {
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content"><channel><title>Swiftdaddy</title><description>Blog about App development for iOS</description><link>https://seviu.github.io/</link><language>en</language><lastBuildDate>Tue, 1 Sep 2020 13:52:24 +0000</lastBuildDate><pubDate>Tue, 1 Sep 2020 13:52:24 +0000</pubDate><ttl>250</ttl><atom:link href="https://seviu.github.io/feed.rss" rel="self" type="application/rss+xml"/><item><guid isPermaLink="true">https://seviu.github.io/articles/Diving%20into%20Lazy,%20Computed%20and%20Stored%20Properties</guid><title>Diving into Lazy, Computed and Stored Properties</title><description>We look into computed, lazy, and stored properties, and explore their behavior and differences we might encounter when dealing with them.</description><link>https://seviu.github.io/articles/Diving%20into%20Lazy,%20Computed%20and%20Stored%20Properties</link><pubDate>Sun, 30 Aug 2020 09:41:00 +0000</pubDate><content:encoded><![CDATA[<p>Swift lets you initialize properties in multiple ways. This article quickly goes through all different permutations var/let/static allowed.</p><p>Let's start with a very simple struct with methods that <code>print</code> themselves and return a constant with a different string each. And lets try all permutations:</p><pre><code><span class="keyword">struct</span> PropertyTest {
+	<span class="keyword">var</span> prop1: <span class="type">String</span> {
+		<span class="call">print</span>(<span class="string">"- computing1..."</span>)
+		<span class="keyword">return</span> <span class="string">"prop1"</span> + <span class="keyword">#function</span>
+	}
+	
+	<span class="keyword">var</span> prop2: <span class="type">String</span> = {
+		<span class="call">print</span>(<span class="string">"- computing2..."</span>)
+		<span class="keyword">return</span> <span class="string">"prop2"</span> + <span class="keyword">#function</span>
+	}()
+	
+	<span class="keyword">lazy var</span> prop3: <span class="type">String</span> = {
+		<span class="call">print</span>(<span class="string">"- computing3..."</span>)
+		<span class="keyword">return</span> <span class="string">"prop3"</span> + <span class="keyword">#function</span>
+	}()
+	
+<span class="comment">// ----&gt; !!! 'let' declarations cannot be computed properties
+//	let prop4: String {
+//		print("computing...")
+//		return #function
+//	}</span>
+	
+	<span class="keyword">let</span> prop5: <span class="type">String</span> = {
+		<span class="call">print</span>(<span class="string">"- computing5..."</span>)
+		<span class="keyword">return</span> <span class="string">"prop5"</span> + <span class="keyword">#function</span>
+	}()
+	
+<span class="comment">// ----&gt; !!! 'lazy' cannot be used on a let
+//	lazy let prop6: String = {
+//		print("computing...")
+//		return #function
+//	}()</span>
+	
+	<span class="keyword">static var</span> prop7: <span class="type">String</span> {
+		<span class="call">print</span>(<span class="string">"- computing7..."</span>)
+		<span class="keyword">return</span> <span class="string">"prop7"</span> + <span class="keyword">#function</span>
+	}
+	
+	<span class="keyword">static var</span> prop8: <span class="type">String</span> = {
+		<span class="call">print</span>(<span class="string">"- computing8..."</span>)
+		<span class="keyword">return</span> <span class="string">"prop8"</span> + <span class="keyword">#function</span>
+	}()
+	
+<span class="comment">// ----&gt; !!! 'lazy' must not be used on an already-lazy global
+//	static lazy var prop9: String = {
+//		print("computing...")
+//		return #function
+//	}()
+	
+// ----&gt; !!! 'let' declarations cannot be computed properties
+//	static let prop10: String {
+//		print("computing...")
+//		return #function
+//	}</span>
+	
+	<span class="keyword">static let</span> prop11: <span class="type">String</span> = {
+		<span class="call">print</span>(<span class="string">"- computing11..."</span>)
+		<span class="keyword">return</span> <span class="string">"prop11"</span> + <span class="keyword">#function</span>
+	}()
+	
+<span class="comment">// ----&gt; !!! 'lazy' cannot be used on a let
+//	static lazy let prop12: String = {
+//		print("computing...")
+//		return #function
+//	}()</span>
+}
+</code></pre><p>First of all, some methods are commented with the error code. The most interesting one is the one that states that <code>lazy must not be used on an already-lazy global</code>. This means that statics are lazy by default. This makes sense for what comes next.</p><pre><code><span class="keyword">var</span> test = <span class="type">PropertyTest</span>()
+
+&gt; - computing2...
+&gt; - computing5...
+
+</code></pre><p>Just by instantiating <code>PropertyTest</code>, we are greeted by the initialization of <code>prop2</code> and <code>prop5</code>.</p><p><code>prop2</code> and <code>prop5</code> are pre-set whenever we build a new distance of <code>PropertyTest</code>.</p><p>Let's go now var by var, fetch and print all our properties</p><h2>prop1</h2><pre><code>		<span class="keyword">var</span> prop1: <span class="type">String</span> {
+		<span class="call">print</span>(<span class="string">"- computing1..."</span>)
+		<span class="keyword">return</span> <span class="string">"prop1"</span> + <span class="keyword">#function</span>
+	}
+</code></pre><pre><code><span class="call">print</span>(test.<span class="property">prop1</span>)
+&gt; - computing1...
+&gt; prop1prop1
+
+<span class="call">print</span>(test.<span class="property">prop1</span>)
+&gt; - computing1...
+&gt; prop1prop1
+</code></pre><p>That's it, every time we access prop1, we compute it. It is a <strong>computed property</strong> and the function name we are calling is <code>prop1</code></p><p>Computed properties cannot be changed. Therefore the <code>test.prop1 = "1"</code> assignment does not compile.</p><h2>prop2</h2><pre><code>		<span class="keyword">var</span> prop2: <span class="type">String</span> = {
+		<span class="call">print</span>(<span class="string">"- computing2..."</span>)
+		<span class="keyword">return</span> <span class="string">"prop2"</span> + <span class="keyword">#function</span>
+	}()
+</code></pre><pre><code><span class="call">print</span>(test.<span class="property">prop2</span>)
+&gt; prop2PropertyTest
+
+<span class="call">print</span>(test.<span class="property">prop2</span>)
+&gt; prop2PropertyTest
+</code></pre><p>That's it, every time we access prop2, it is already computed. It is a <strong>stored property</strong> and the function name is <code>PropertyTest</code> because it was built in its constructor.</p><p>Stored properties can be changed. <code>test.prop2 = "1"</code> is perfectly legal.</p><h2>prop3</h2><pre><code>   <span class="keyword">lazy var</span> prop3: <span class="type">String</span> = {
+		<span class="call">print</span>(<span class="string">"- computing3..."</span>)
+		<span class="keyword">return</span> <span class="string">"prop3"</span> + <span class="keyword">#function</span>
+	}()
+</code></pre><pre><code><span class="call">print</span>(test.<span class="property">prop3</span>)
+&gt; - computing3...
+&gt; prop3prop3
+
+<span class="call">print</span>(test.<span class="property">prop3</span>)
+&gt; prop3prop3
+</code></pre><p>The first time we access prop3, it gets computed. Any successive calls will not compute it and return the same value. It is like a <strong>lazy stored property</strong></p><p>Lazy properties can be changed, therefore <code>test.prop3 = "3"</code> is valid.</p><h2>prop5</h2><pre><code>		<span class="keyword">let</span> prop5: <span class="type">String</span> = {
+		<span class="call">print</span>(<span class="string">"- computing5..."</span>)
+		<span class="keyword">return</span> <span class="string">"prop5"</span> + <span class="keyword">#function</span>
+	}()
+</code></pre><pre><code><span class="keyword">var</span> test = <span class="type">PropertyTest</span>()
+
+<span class="call">print</span>(test.<span class="property">prop5</span>)
+&gt; prop5PropertyTest
+
+<span class="call">print</span>(test.<span class="property">prop5</span>)
+&gt; prop5PropertyTest
+</code></pre><p>This one is exactly like prop2. It is a <strong>stored property</strong> which is built in the constructor.</p><h2>prop7</h2><pre><code>		<span class="keyword">static var</span> prop7: <span class="type">String</span> {
+		<span class="call">print</span>(<span class="string">"- computing7..."</span>)
+		<span class="keyword">return</span> <span class="string">"prop7"</span> + <span class="keyword">#function</span>
+	}
+</code></pre><pre><code><span class="call">print</span>(<span class="type">PropertyTest</span>.<span class="property">prop7</span>)
+&gt; - computing7...
+&gt; prop7prop7
+
+<span class="call">print</span>(<span class="type">PropertyTest</span>.<span class="property">prop7</span>)
+&gt; - computing7...
+&gt; prop7prop7
+</code></pre><p><code>prop7</code> is a static computed property, like with <code>prop1</code>, its value is computed every time we access it. Also, like with <code>prop1</code>, it is not possible to set its value. Computed properties are get-only properties.</p><h2>prop8</h2><pre><code>		<span class="keyword">static var</span> prop8: <span class="type">String</span> = {
+		<span class="call">print</span>(<span class="string">"- computing8..."</span>)
+		<span class="keyword">return</span> <span class="string">"prop8"</span> + <span class="keyword">#function</span>
+	}()
+</code></pre><pre><code><span class="call">print</span>(<span class="type">PropertyTest</span>.<span class="property">prop8</span>)
+&gt; - computing8...
+&gt; prop8PropertyTest
+
+<span class="call">print</span>(<span class="type">PropertyTest</span>.<span class="property">prop8</span>)
+&gt; prop8PropertyTest
+</code></pre><p>In this case, we are dealing with a static <strong>stored property</strong>. Because it is static, it is lazy by default, meaning that the first time we access it will be computed and successive calls will just reuse the computed value.</p><p>Assigning a value to <code>prop8</code> is perfectly ok. <code>PropertyTest.prop8 = "8"</code> compiles without any problem.</p><h2>prop11</h2><pre><code>		<span class="keyword">static let</span> prop11: <span class="type">String</span> = {
+		<span class="call">print</span>(<span class="string">"- computing11..."</span>)
+		<span class="keyword">return</span> <span class="string">"prop11"</span> + <span class="keyword">#function</span>
+	}()
+</code></pre><pre><code><span class="call">print</span>(<span class="type">PropertyTest</span>.<span class="property">prop11</span>)
+&gt; - computing11...
+&gt; prop11PropertyTest
+
+<span class="call">print</span>(<span class="type">PropertyTest</span>.<span class="property">prop11</span>)
+&gt; prop11PropertyTest
+</code></pre><p><code>prop11</code>, like <code>prop8</code>, is an immutable <strong>stored property</strong></p><h2>var vs let PropertyTest()</h2><p>Something interesting happens when we declare test as immutable</p><pre><code><span class="keyword">let</span> test = <span class="type">PropertyTest</span>()
+</code></pre><p>If we do this then we cannot access our lazy property, <code>prop3</code>.</p><pre><code><span class="call">print</span>(test.<span class="property">prop3</span>)  -&gt;  !!! <span class="type">Cannot</span> use <span class="keyword">mutating</span> getter on immutable value: 'test' <span class="keyword">is</span> a '<span class="keyword">let</span>' constant
+</code></pre><p><strong>lazy stored properties</strong> are mutating and <code>test</code> is now a constant. Since we are dealing with a struct here, which is a value type, if we declare it as a constant, we cannot access any lazy property it might have declared, as it would mean we are changing <code>test</code>.</p><h2>initializing</h2><p>We have seen that we can change the value of stored properties. What happens when we do that on <code>prop8</code> which is static and lazy?</p><pre><code><span class="type">PropertyTest</span>.<span class="property">prop8</span> = <span class="string">"8"</span>
+&gt; - computing8...
+
+<span class="call">print</span>(test.<span class="property">prop8</span>)
+&gt; <span class="number">8</span>
+</code></pre><p>By accessing <code>prop8</code> we first initialize it, and then we set it. Therefore one can see that it is first being set with its default value, and then the value changes to the one we want it to have.</p><h2>Final thoughts</h2><p>No matter what the nature of the topic we dive in, there will always be underlying complexities and small differences in behavior... Even for something as trivial as something such as stored and computed properties!</p>]]></content:encoded></item><item><guid isPermaLink="true">https://seviu.github.io/articles/Associated%20Types%20and%20Protocols</guid><title>Associated Types and Protocols</title><description>Taking a look into Protocols and how we can use them with generic types in the form of Associated Types</description><link>https://seviu.github.io/articles/Associated%20Types%20and%20Protocols</link><pubDate>Sat, 29 Aug 2020 09:41:00 +0000</pubDate><content:encoded><![CDATA[<h2>Understanding the problem</h2><p>While working in a problem with a colleague we came upon a problem in which it was necessary to transform one element into an array of something complex and different. Since this was a pattern that was going to repeat itself, we defined a protocol for that.</p><p>The problem itself required us to have a <code>Parser</code> which would transform some JSON into an array of core data elements. Lets name them <code>Element</code> and <code>ComplexElement</code></p><h2>Our setup</h2><p>We have a Parser that transforms some <code>Codable</code> into an array of <code>ComplexObject</code>.</p><pre><code><span class="keyword">protocol</span> Parser {
 	<span class="keyword">func</span> transform(data: <span class="type">Codable</span>?) -&gt; [<span class="type">ComplexObject</span>]
 }
 </code></pre><p>What we want to achieve here is to transform <code>JsonElement</code> (which is <code>Codable</code>) into <code>ComplexMessage</code> (which is <code>ComplexObject</code>)</p><pre><code><span class="keyword">struct</span> JsonElement: <span class="type">Codable</span> {
@@ -34,7 +184,13 @@
 		<span class="keyword">return</span> []
 	}
 }
-</code></pre><p>And that’s it. There is not a lot of magic around associated types. They are just placeholders we can just fill with a <code>typealias</code>.</p>]]></content:encoded></item><item><guid isPermaLink="true">https://seviu.github.io/articles/Optionals%20under%20the%20hood</guid><title>Optionals under the hood</title><description>Exploring how Optionals are implemented, and trying to understand what is the magic that powers them.</description><link>https://seviu.github.io/articles/Optionals%20under%20the%20hood</link><pubDate>Mon, 3 Aug 2020 09:41:00 +0000</pubDate><content:encoded><![CDATA[<p>In this article, we will dive a little bit into Optionals. We will start this with the following statement:</p><p><strong>Optionals are enums.</strong></p><p>This can take you by surprise. However, once you start diving into it, everything starts making sense.</p><pre><code><span class="keyword">@frozen enum</span> Optional&lt;Wrapped&gt;
+</code></pre><p>And that’s it. There is not a lot of magic around associated types. They are just placeholders we can just fill with a <code>typealias</code>.</p>]]></content:encoded></item><item><guid isPermaLink="true">https://seviu.github.io/notes/XCTest%20Tips%20and%20Tricks</guid><title>XCTest Tips and Tricks</title><description>Small code snipets and tricks for when I write tests for my Apps</description><link>https://seviu.github.io/notes/XCTest%20Tips%20and%20Tricks</link><pubDate>Mon, 3 Aug 2020 09:41:00 +0000</pubDate><content:encoded><![CDATA[<p>Some tips and tricks I have come across by running XCTest which I thought might be helpful</p><h2>Print the accessibility tree</h2><p>If you want to know which elements are there it is just as easy as put a breakpoint where you are having issues and run the following:</p><pre><code>po <span class="call">print</span>(<span class="type">XCUIApplication</span>().<span class="property">debugDescription</span>)
+</code></pre><h2>Element not found?</h2><p>If an element is not found it is maybe because you configured any of its super views with an accessibility identifier.</p><p>Once a view has an accessibility identifier set then subviews will not be visible in the accessibility tree.</p><p>If they are not visible you will not be able to fetch them.</p><h2>Clear the data of your app before running the tests</h2><p>XCTest has a variable called <code>launchArguments</code>. You can pass an argument that your AppDelegate will be able to pick up on start (or any other part of your code)</p><p>On <code>willFinishLaunchingWithOptions</code>just query for this argument and if it is a XCTest then proceed to clean up your app:</p><pre><code><span class="preprocessing">#if DEBUG</span>
+  <span class="keyword">if</span> <span class="type">ProcessInfo</span>.<span class="property">processInfo</span>.<span class="property">arguments</span>.<span class="call">contains</span>(<span class="string">"XCTest"</span>) {
+    <span class="comment">// cleanup NSDocumentDirectory, disable animations etc...</span>
+  }
+<span class="preprocessing">#endif</span>
+</code></pre><blockquote><p>Tip: If you have problems with legacy code and table/collection views, try to reloadData</p></blockquote>]]></content:encoded></item><item><guid isPermaLink="true">https://seviu.github.io/articles/Optionals%20under%20the%20hood</guid><title>Optionals under the hood</title><description>Exploring how Optionals are implemented, and trying to understand what is the magic that powers them.</description><link>https://seviu.github.io/articles/Optionals%20under%20the%20hood</link><pubDate>Mon, 3 Aug 2020 09:41:00 +0000</pubDate><content:encoded><![CDATA[<p>In this article, we will dive a little bit into Optionals. We will start this with the following statement:</p><p><strong>Optionals are enums.</strong></p><p>This can take you by surprise. However, once you start diving into it, everything starts making sense.</p><pre><code><span class="keyword">@frozen enum</span> Optional&lt;Wrapped&gt;
 </code></pre><p><em>An Optional is a type that represents either a wrapped value or nil, the absence of a value.</em></p><p>Usually, optionals are defined with a question mark <code>?</code>, but since we now know it is an enum, we might declare it as such: <code>Optional&lt;MyClass&gt;</code> instead of as <code>MyClass?</code></p><p>For this tutorial I just saw how Optional is declared in the standard library:</p><pre><code><span class="keyword">enum</span> Optional&lt;Wrapped&gt; : <span class="type">ExpressibleByNilLiteral</span> {
     <span class="comment">/// The absence of a value.
     ///
@@ -172,13 +328,7 @@ struct</span> MyApp: <span class="type">App</span> {
 		}
 	}
 }
-</code></pre><h3>New property wrappers</h3><ul><li>AppStorage: for user defaults</li><li>ScaledMetric: a dynamic property that scales a numeric value (great for accessibility since it lets us scale things like images)</li><li>SceneStorage: for automatic state restoration</li><li>StateObject: similar to State, survive views updates</li><li>@UIApplicationDelegateAdaptor to access UIKit AppDelegate</li></ul><h3>And more</h3><ul><li>Color Picker</li><li>SignInWithAppleButton</li><li>ProgressView</li><li>OutlineGroup for trees</li><li>etc...</li></ul><h2>Networking</h2><p>From iOS 14 onwards IPv6 support will be mandatory</p><p>URLSession has HTTP/2 built-in</p><p>TLS1.3</p><p>Improvements in Multipath TCP to switch between networks</p><h3>Privacy</h3><p>Full support for encrypted DNS (DoH and DoT)</p><p>HTTP/3 experimental support</p><p>Local network privacy restrictions in which a dialog will pop up if an app wants to find and connect devices in the local network</p><h2>Testing (XCode 11.4)</h2><p>New in Xcode 12, you can see the backtrace for thrown errors, which will be quite handy since if your test fails in a function, you will be able to see which part of your test triggered it.</p><p>recordFailure deprecated in favor of record(_ issue: XCTIssue)</p><p>executionTimeAllowance</p><p>Skipping tests XCTSkip, XCTSkipIf, XCTSkipUnless</p><h2>Tracking</h2><p>Fetching the Advertisement Identifier will require asking our users</p><p>Reading from clipboard will be visible to the user when it happens</p><p>Once iOS 14 is available developers will have to enter privacy practice details into App Store Connect for display on your App Store product page.</p><h2>ARKit 4</h2><p>Location Anchors to be able to place ARKit elements in real-world coordinates and do some interesting geo-tracking.</p><p>Depth API using the LiDAR scanner already available in the iPad Pro will enable more realistic virtual object occlusion.</p><p>Better ray-casting for objects</p><p>Better Face Tracking now supporting both cameras front and back with up to three faces at once</p><h2>And more...</h2><p>Nearby interactions:</p><ul><li>Using the U1 Chip available from iPhone 11</li><li>It lets us measure distances and discovering peers with MultipeerConnectivity</li></ul><p>&nbsp;</p><p>Local Push Connectivity. It has a very limited use case only intended for places like cruise ships where there is no access to APNs.</p><p>Binary frameworks distribution with Swift package manager</p><p>Vision API to analyze motion and video</p><p>PencilKit with handwriting recognition</p><p>And of course Big Sur with Apple Silicon!</p>]]></content:encoded></item><item><guid isPermaLink="true">https://seviu.github.io/notes/XCTest%20Tips%20and%20Tricks</guid><title>XCTest Tips and Tricks</title><description>Small code snipets and tricks for when I write tests for my Apps</description><link>https://seviu.github.io/notes/XCTest%20Tips%20and%20Tricks</link><pubDate>Mon, 3 Aug 2020 09:41:00 +0000</pubDate><content:encoded><![CDATA[<p>Some tips and tricks I have come across by running XCTest which I thought might be helpful</p><h2>Print the accessibility tree</h2><p>If you want to know which elements are there it is just as easy as put a breakpoint where you are having issues and run the following:</p><pre><code>po <span class="call">print</span>(<span class="type">XCUIApplication</span>().<span class="property">debugDescription</span>)
-</code></pre><h2>Element not found?</h2><p>If an element is not found it is maybe because you configured any of its super views with an accessibility identifier.</p><p>Once a view has an accessibility identifier set then subviews will not be visible in the accessibility tree.</p><p>If they are not visible you will not be able to fetch them.</p><h2>Clear the data of your app before running the tests</h2><p>XCTest has a variable called <code>launchArguments</code>. You can pass an argument that your AppDelegate will be able to pick up on start (or any other part of your code)</p><p>On <code>willFinishLaunchingWithOptions</code>just query for this argument and if it is a XCTest then proceed to clean up your app:</p><pre><code><span class="preprocessing">#if DEBUG</span>
-  <span class="keyword">if</span> <span class="type">ProcessInfo</span>.<span class="property">processInfo</span>.<span class="property">arguments</span>.<span class="call">contains</span>(<span class="string">"XCTest"</span>) {
-    <span class="comment">// cleanup NSDocumentDirectory, disable animations etc...</span>
-  }
-<span class="preprocessing">#endif</span>
-</code></pre><blockquote><p>Tip: If you have problems with legacy code and table/collection views, try to reloadData</p></blockquote>]]></content:encoded></item><item><guid isPermaLink="true">https://seviu.github.io/articles/Diving%20into%20Cell%20Registration%20for%20Collection%20Views</guid><title>Diving into Cell Registration for Collection Views</title><description>iOS 14 brings us Cell Registration for Collection Views. This simplifies things.</description><link>https://seviu.github.io/articles/Diving%20into%20Cell%20Registration%20for%20Collection%20Views</link><pubDate>Sat, 1 Aug 2020 09:41:00 +0000</pubDate><content:encoded><![CDATA[<p>Back before <strong>iOS 14</strong> if you want to dequeue a cell for reuse you needed to register it first. It was a tedious two-step process that we all are used to.</p><p>Register</p><pre><code>collectionView.<span class="call">register</span>(<span class="type">Cell</span>.<span class="keyword">self</span>, forCellWithReuseIdentifier: <span class="string">"Foo"</span>)
+</code></pre><h3>New property wrappers</h3><ul><li>AppStorage: for user defaults</li><li>ScaledMetric: a dynamic property that scales a numeric value (great for accessibility since it lets us scale things like images)</li><li>SceneStorage: for automatic state restoration</li><li>StateObject: similar to State, survive views updates</li><li>@UIApplicationDelegateAdaptor to access UIKit AppDelegate</li></ul><h3>And more</h3><ul><li>Color Picker</li><li>SignInWithAppleButton</li><li>ProgressView</li><li>OutlineGroup for trees</li><li>etc...</li></ul><h2>Networking</h2><p>From iOS 14 onwards IPv6 support will be mandatory</p><p>URLSession has HTTP/2 built-in</p><p>TLS1.3</p><p>Improvements in Multipath TCP to switch between networks</p><h3>Privacy</h3><p>Full support for encrypted DNS (DoH and DoT)</p><p>HTTP/3 experimental support</p><p>Local network privacy restrictions in which a dialog will pop up if an app wants to find and connect devices in the local network</p><h2>Testing (XCode 11.4)</h2><p>New in Xcode 12, you can see the backtrace for thrown errors, which will be quite handy since if your test fails in a function, you will be able to see which part of your test triggered it.</p><p>recordFailure deprecated in favor of record(_ issue: XCTIssue)</p><p>executionTimeAllowance</p><p>Skipping tests XCTSkip, XCTSkipIf, XCTSkipUnless</p><h2>Tracking</h2><p>Fetching the Advertisement Identifier will require asking our users</p><p>Reading from clipboard will be visible to the user when it happens</p><p>Once iOS 14 is available developers will have to enter privacy practice details into App Store Connect for display on your App Store product page.</p><h2>ARKit 4</h2><p>Location Anchors to be able to place ARKit elements in real-world coordinates and do some interesting geo-tracking.</p><p>Depth API using the LiDAR scanner already available in the iPad Pro will enable more realistic virtual object occlusion.</p><p>Better ray-casting for objects</p><p>Better Face Tracking now supporting both cameras front and back with up to three faces at once</p><h2>And more...</h2><p>Nearby interactions:</p><ul><li>Using the U1 Chip available from iPhone 11</li><li>It lets us measure distances and discovering peers with MultipeerConnectivity</li></ul><p>&nbsp;</p><p>Local Push Connectivity. It has a very limited use case only intended for places like cruise ships where there is no access to APNs.</p><p>Binary frameworks distribution with Swift package manager</p><p>Vision API to analyze motion and video</p><p>PencilKit with handwriting recognition</p><p>And of course Big Sur with Apple Silicon!</p>]]></content:encoded></item><item><guid isPermaLink="true">https://seviu.github.io/articles/Diving%20into%20Cell%20Registration%20for%20Collection%20Views</guid><title>Diving into Cell Registration for Collection Views</title><description>iOS 14 brings us Cell Registration for Collection Views. This simplifies things.</description><link>https://seviu.github.io/articles/Diving%20into%20Cell%20Registration%20for%20Collection%20Views</link><pubDate>Sat, 1 Aug 2020 09:41:00 +0000</pubDate><content:encoded><![CDATA[<p>Back before <strong>iOS 14</strong> if you want to dequeue a cell for reuse you needed to register it first. It was a tedious two-step process that we all are used to.</p><p>Register</p><pre><code>collectionView.<span class="call">register</span>(<span class="type">Cell</span>.<span class="keyword">self</span>, forCellWithReuseIdentifier: <span class="string">"Foo"</span>)
 </code></pre><p>And dequeue</p><pre><code>collectionView.<span class="call">dequeueReusableCell</span>(withReuseIdentifier: <span class="string">"Foo"</span>, for: indexPath) <span class="keyword">as</span>! <span class="type">Cell</span>
 </code></pre><p>iOS 14 brings us a very welcomed cell registration through an iOS 14 only UICollectionView extension:</p><pre><code><span class="keyword">public struct</span> CellRegistration&lt;Cell, Item&gt; <span class="keyword">where</span> <span class="type">Cell</span> : <span class="type">UICollectionViewCell</span>
 </code></pre><p>If we are to make use of this new feature, we will need a data source. For our example, we will use UICollectionViewDiffableDataSource available since iOS 13.</p><p>iOS 14 gives us CellRegistration, a new mechanism to dequeue a reusable UICollectionViewCell.</p><p>We will need three elements when calling CellRegistration’s handle: The UICollectionView where we render our cells. The Position of the cell: our IndexPath An Item, which is our model with all the information the cell will render: ItemIdentifierType. <em>Since we are using a diffable data source, our model must adopt Hashable.</em></p><p>UICollectionViewDiffableDataSource has as parameter a CellProvider, which is a closure that builds a UICollectionViewCell and has as all the elements needed to build our collection view an IndexPath and our Item, or model</p><pre><code><span class="type">UICollectionView</span>, <span class="type">IndexPath</span> and <span class="type">ItemIdentifierType</span> (our model)
