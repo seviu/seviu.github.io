@@ -110,10 +110,10 @@
 &gt; - computing2...
 &gt; - computing5...
 
-</code></pre><p>Just by instantiating <code>PropertyTest</code>, we are greeted by the initialization of <code>prop2</code> and <code>prop5</code>.</p><p><code>prop2</code> and <code>prop5</code> are pre-set whenever we build a new distance of <code>PropertyTest</code>. They are <strong>stored properties</strong>. Non-lazy stored properties are set on initialization regardless of whether we are dealing with a struct or a class. More about stored properties later.</p><h2>prop1</h2><pre><code>		<span class="keyword">var</span> prop1: <span class="type">String</span> {
-		<span class="call">print</span>(<span class="string">"- computing1..."</span>)
-		<span class="keyword">return</span> <span class="string">"prop1"</span> + <span class="keyword">#function</span>
-	}
+</code></pre><p>Just by instantiating <code>PropertyTest</code>, we are greeted by the initialization of <code>prop2</code> and <code>prop5</code>.</p><p><code>prop2</code> and <code>prop5</code> are pre-set whenever we build a new distance of <code>PropertyTest</code>. They are <strong>stored properties</strong>. Non-lazy stored properties are set on initialization regardless of whether we are dealing with a struct or a class. More about stored properties later.</p><h2>prop1</h2><pre><code><span class="keyword">var</span> prop1: <span class="type">String</span> {
+	<span class="call">print</span>(<span class="string">"- computing1..."</span>)
+	<span class="keyword">return</span> <span class="string">"prop1"</span> + <span class="keyword">#function</span>
+}
 </code></pre><pre><code><span class="call">print</span>(test.<span class="property">prop1</span>)
 &gt; - computing1...
 &gt; prop1prop1
@@ -121,29 +121,29 @@
 <span class="call">print</span>(test.<span class="property">prop1</span>)
 &gt; - computing1...
 &gt; prop1prop1
-</code></pre><p>That's it, every time we access prop1, we compute it. It is a <strong>computed property</strong> and the function name we are calling is <code>prop1</code></p><p>Computed properties cannot be changed. Therefore the <code>test.prop1 = "1"</code> assignment does not compile.</p><h2>prop2</h2><pre><code>		<span class="keyword">var</span> prop2: <span class="type">String</span> = {
-		<span class="call">print</span>(<span class="string">"- computing2..."</span>)
-		<span class="keyword">return</span> <span class="string">"prop2"</span> + <span class="keyword">#function</span>
-	}()
+</code></pre><p>That's it, every time we access prop1, we compute it. It is a <strong>computed property</strong> and the function name we are calling is <code>prop1</code></p><p>Computed properties cannot be changed. Therefore the <code>test.prop1 = "1"</code> assignment does not compile.</p><h2>prop2</h2><pre><code><span class="keyword">var</span> prop2: <span class="type">String</span> = {
+	<span class="call">print</span>(<span class="string">"- computing2..."</span>)
+	<span class="keyword">return</span> <span class="string">"prop2"</span> + <span class="keyword">#function</span>
+}()
 </code></pre><pre><code><span class="call">print</span>(test.<span class="property">prop2</span>)
 &gt; prop2PropertyTest
 
 <span class="call">print</span>(test.<span class="property">prop2</span>)
 &gt; prop2PropertyTest
-</code></pre><p>That's it, every time we access prop2, it is already computed. It is a <strong>stored property</strong> and the function name is <code>PropertyTest</code> because it was built in its constructor.</p><p>Stored properties can be changed. <code>test.prop2 = "1"</code> is perfectly legal.</p><h2>prop3</h2><pre><code>   <span class="keyword">lazy var</span> prop3: <span class="type">String</span> = {
-		<span class="call">print</span>(<span class="string">"- computing3..."</span>)
-		<span class="keyword">return</span> <span class="string">"prop3"</span> + <span class="keyword">#function</span>
-	}()
+</code></pre><p>That's it, every time we access prop2, it is already computed. It is a <strong>stored property</strong> and the function name is <code>PropertyTest</code> because it was built in its constructor.</p><p>Stored properties can be changed. <code>test.prop2 = "1"</code> is perfectly legal.</p><h2>prop3</h2><pre><code><span class="keyword">lazy var</span> prop3: <span class="type">String</span> = {
+	<span class="call">print</span>(<span class="string">"- computing3..."</span>)
+	<span class="keyword">return</span> <span class="string">"prop3"</span> + <span class="keyword">#function</span>
+}()
 </code></pre><pre><code><span class="call">print</span>(test.<span class="property">prop3</span>)
 &gt; - computing3...
 &gt; prop3prop3
 
 <span class="call">print</span>(test.<span class="property">prop3</span>)
 &gt; prop3prop3
-</code></pre><p>The first time we access prop3, it gets computed. Any successive calls will not compute it and return the same value. It is like a <strong>lazy stored property</strong></p><p>Lazy properties can be changed, therefore <code>test.prop3 = "3"</code> is valid.</p><h2>prop5</h2><pre><code>		<span class="keyword">let</span> prop5: <span class="type">String</span> = {
-		<span class="call">print</span>(<span class="string">"- computing5..."</span>)
-		<span class="keyword">return</span> <span class="string">"prop5"</span> + <span class="keyword">#function</span>
-	}()
+</code></pre><p>The first time we access prop3, it gets computed. Any successive calls will not compute it and return the same value. It is like a <strong>lazy stored property</strong></p><p>Lazy properties can be changed, therefore <code>test.prop3 = "3"</code> is valid.</p><h2>prop5</h2><pre><code><span class="keyword">let</span> prop5: <span class="type">String</span> = {
+	<span class="call">print</span>(<span class="string">"- computing5..."</span>)
+	<span class="keyword">return</span> <span class="string">"prop5"</span> + <span class="keyword">#function</span>
+}()
 </code></pre><pre><code><span class="keyword">var</span> test = <span class="type">PropertyTest</span>()
 
 <span class="call">print</span>(test.<span class="property">prop5</span>)
@@ -151,10 +151,10 @@
 
 <span class="call">print</span>(test.<span class="property">prop5</span>)
 &gt; prop5PropertyTest
-</code></pre><p>This one is exactly like prop2. It is a <strong>stored property</strong> which is built in the constructor.</p><h2>prop7</h2><pre><code>		<span class="keyword">static var</span> prop7: <span class="type">String</span> {
-		<span class="call">print</span>(<span class="string">"- computing7..."</span>)
-		<span class="keyword">return</span> <span class="string">"prop7"</span> + <span class="keyword">#function</span>
-	}
+</code></pre><p>This one is exactly like prop2. It is a <strong>stored property</strong> which is built in the constructor.</p><h2>prop7</h2><pre><code><span class="keyword">static var</span> prop7: <span class="type">String</span> {
+	<span class="call">print</span>(<span class="string">"- computing7..."</span>)
+	<span class="keyword">return</span> <span class="string">"prop7"</span> + <span class="keyword">#function</span>
+}
 </code></pre><pre><code><span class="call">print</span>(<span class="type">PropertyTest</span>.<span class="property">prop7</span>)
 &gt; - computing7...
 &gt; prop7prop7
@@ -162,20 +162,20 @@
 <span class="call">print</span>(<span class="type">PropertyTest</span>.<span class="property">prop7</span>)
 &gt; - computing7...
 &gt; prop7prop7
-</code></pre><p><code>prop7</code> is a static computed property, like with <code>prop1</code>, its value is computed every time we access it. Also, like with <code>prop1</code>, it is not possible to set its value. Computed properties are get-only properties.</p><h2>prop8</h2><pre><code>		<span class="keyword">static var</span> prop8: <span class="type">String</span> = {
-		<span class="call">print</span>(<span class="string">"- computing8..."</span>)
-		<span class="keyword">return</span> <span class="string">"prop8"</span> + <span class="keyword">#function</span>
-	}()
+</code></pre><p><code>prop7</code> is a static computed property, like with <code>prop1</code>, its value is computed every time we access it. Also, like with <code>prop1</code>, it is not possible to set its value. Computed properties are get-only properties.</p><h2>prop8</h2><pre><code><span class="keyword">static var</span> prop8: <span class="type">String</span> = {
+	<span class="call">print</span>(<span class="string">"- computing8..."</span>)
+	<span class="keyword">return</span> <span class="string">"prop8"</span> + <span class="keyword">#function</span>
+}()
 </code></pre><pre><code><span class="call">print</span>(<span class="type">PropertyTest</span>.<span class="property">prop8</span>)
 &gt; - computing8...
 &gt; prop8PropertyTest
 
 <span class="call">print</span>(<span class="type">PropertyTest</span>.<span class="property">prop8</span>)
 &gt; prop8PropertyTest
-</code></pre><p>In this case, we are dealing with a static <strong>stored property</strong>. Because it is static, it is lazy by default, meaning that the first time we access it will be computed and successive calls will just reuse the computed value.</p><p>Assigning a value to <code>prop8</code> is perfectly ok. <code>PropertyTest.prop8 = "8"</code> compiles without any problem.</p><h2>prop11</h2><pre><code>		<span class="keyword">static let</span> prop11: <span class="type">String</span> = {
-		<span class="call">print</span>(<span class="string">"- computing11..."</span>)
-		<span class="keyword">return</span> <span class="string">"prop11"</span> + <span class="keyword">#function</span>
-	}()
+</code></pre><p>In this case, we are dealing with a static <strong>stored property</strong>. Because it is static, it is lazy by default, meaning that the first time we access it will be computed and successive calls will just reuse the computed value.</p><p>Assigning a value to <code>prop8</code> is perfectly ok. <code>PropertyTest.prop8 = "8"</code> compiles without any problem.</p><h2>prop11</h2><pre><code><span class="keyword">static let</span> prop11: <span class="type">String</span> = {
+  <span class="call">print</span>(<span class="string">"- computing11..."</span>)
+  <span class="keyword">return</span> <span class="string">"prop11"</span> + <span class="keyword">#function</span>
+}()
 </code></pre><pre><code><span class="call">print</span>(<span class="type">PropertyTest</span>.<span class="property">prop11</span>)
 &gt; - computing11...
 &gt; prop11PropertyTest
