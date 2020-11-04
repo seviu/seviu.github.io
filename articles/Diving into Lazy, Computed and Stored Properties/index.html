@@ -1,45 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8"/>
-		<meta name="og:site_name" content="Swiftdaddy"/>
-		<link rel="canonical" href="https://seviu.github.io/articles/Diving%20into%20Lazy,%20Computed%20and%20Stored%20Properties"/>
-		<meta name="twitter:url" content="https://seviu.github.io/articles/Diving%20into%20Lazy,%20Computed%20and%20Stored%20Properties"/>
-		<meta name="og:url" content="https://seviu.github.io/articles/Diving%20into%20Lazy,%20Computed%20and%20Stored%20Properties"/>
-		<title>Diving into Lazy, Computed and Stored Properties | Swiftdaddy</title>
-		<meta name="twitter:title" content="Diving into Lazy, Computed and Stored Properties | Swiftdaddy"/>
-		<meta name="og:title" content="Diving into Lazy, Computed and Stored Properties | Swiftdaddy"/>
-		<meta name="description" content="We look into computed, lazy, and stored properties, and explore the behavior and differences we might encounter when dealing with them."/>
-		<meta name="twitter:description" content="We look into computed, lazy, and stored properties, and explore the behavior and differences we might encounter when dealing with them."/>
-		<meta name="og:description" content="We look into computed, lazy, and stored properties, and explore the behavior and differences we might encounter when dealing with them."/>
-		<meta name="twitter:card" content="summary"/>
-		<link rel="stylesheet" href="/styles.css" type="text/css"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<link rel="shortcut icon" href="/images/favicon.png" type="image/png"/>
-		<link rel="alternate" href="/feed.rss" type="application/rss+xml" title="Subscribe to Swiftdaddy"/>
-	</head>
-	<body class="item-page">
-		<header>
-			<div class="wrapper">
-				<a class="site-name" href="/">
-					<img class="logo"/>
-				</a>
-				<h4>Blog about App development for iOS</h4>
-				<nav>
-					<ul>
-						<li class="selected">
-							<a href="/articles">Articles</a>
-						</li>
-						<li>
-							<a href="/notes">Notes</a>
-						</li>
-					</ul>
-				</nav>
-			</div>
-		</header>
-		<div class="wrapper">
-			<article>
-				<div class="content"><h2>Properties, properties, properties!!!</h2><p>Swift lets you initialize properties in multiple ways. This article quickly goes through all different permutations var/let/static allowed.</p><p>Let's start with a very simple struct. This struct declares all kinds of properties. Each one executes a <code>print</code> statement and returns a constant with a different string each.</p><pre><code><span class="keyword">struct</span> PropertyTest {
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="og:site_name" content="Swiftdaddy"/>
+    <link rel="canonical" href="https://seviu.github.io/articles/Diving%20into%20Lazy,%20Computed%20and%20Stored%20Properties"/>
+    <meta name="twitter:url" content="https://seviu.github.io/articles/Diving%20into%20Lazy,%20Computed%20and%20Stored%20Properties"/>
+    <meta name="og:url" content="https://seviu.github.io/articles/Diving%20into%20Lazy,%20Computed%20and%20Stored%20Properties"/>
+    <title>Diving into Lazy, Computed and Stored Properties | Swiftdaddy</title>
+    <meta name="twitter:title" content="Diving into Lazy, Computed and Stored Properties | Swiftdaddy"/>
+    <meta name="og:title" content="Diving into Lazy, Computed and Stored Properties | Swiftdaddy"/>
+    <meta name="description" content="We look into computed, lazy, and stored properties, and explore the behavior and differences we might encounter when dealing with them."/>
+    <meta name="twitter:description" content="We look into computed, lazy, and stored properties, and explore the behavior and differences we might encounter when dealing with them."/>
+    <meta name="og:description" content="We look into computed, lazy, and stored properties, and explore the behavior and differences we might encounter when dealing with them."/>
+    <meta name="twitter:card" content="summary"/>
+    <link rel="stylesheet" href="/styles.css" type="text/css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/images/favicon.png" type="image/png"/>
+    <link rel="alternate" href="/feed.rss" type="application/rss+xml" title="Subscribe to Swiftdaddy"/>
+    <meta name="twitter:image" content="https://seviu.github.io/images/swiftdaddy.png"/>
+    <meta name="og:image" content="https://seviu.github.io/images/swiftdaddy.png"/>
+  </head>
+  <body class="item-page">
+    <header>
+      <div class="wrapper">
+        <a class="site-name" href="/">
+          <img class="logo"/>
+        </a>
+        <h4>Blog about App development for iOS</h4>
+        <nav>
+          <ul>
+            <li class="selected">
+              <a href="/articles">Articles</a>
+            </li>
+            <li>
+              <a href="/notes">Notes</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <div class="wrapper">
+      <article>
+        <div class="content"><h2>Properties, properties, properties!!!</h2><p>Swift lets you initialize properties in multiple ways. This article quickly goes through all different permutations var/let/static allowed.</p><p>Let's start with a very simple struct. This struct declares all kinds of properties. Each one executes a <code>print</code> statement and returns a constant with a different string each.</p><pre><code><span class="keyword">struct</span> PropertyTest {
 	<span class="keyword">var</span> prop1: <span class="type">String</span> {
 		<span class="call">print</span>(<span class="string">"- computing1..."</span>)
 		<span class="keyword">return</span> <span class="string">"prop1"</span> + <span class="keyword">#function</span>
@@ -205,29 +207,29 @@
 <span class="call">print</span>(test.<span class="property">prop8</span>)
 &gt; <span class="number">8</span>
 </code></pre><p>By accessing <code>prop8</code> we first initialize it, and then we set it. Therefore one can see that it is first being set with its default value, and then the value changes to the one we want it to have.</p><h2>Final thoughts</h2><p>No matter what the nature of the topic we dive in, there will always be underlying complexities and small differences in behavior... Even for something as trivial such as stored and computed properties!</p></div>
-				<br/>
-				<br/>
-				<p>Published on September 1, 2020</p>
-				<span>Tagged with: </span>
-				<ul class="tag-list">
-					<li>
-						<a href="/tags/swift">swift</a>
-					</li>
-				</ul>
-			</article>
-		</div>
-		<footer>
-			<p>This website was made in Swift thanks to 
-				<a href="https://github.com/johnsundell/ink">Ink</a>, 
-				<a href="https://github.com/johnsundell/plot">Plot</a>, 
-				<a href="https://github.com/johnsundell/splash">Splash</a> &amp; 
-				<a href="https://github.com/johnsundell/publish">Publish</a> by 
-				<a class="rss" href="https://www.swiftbysundell.com">John Sundell</a>
-			</p>
-			<p>©2020 Sebastian Vieira</p>
-			<p>Subscribe via 
-				<a class="rss" href="/feed.rss">RSS</a>
-			</p>
-		</footer>
-	</body>
+        <br/>
+        <br/>
+        <p>Published on September 1, 2020</p>
+        <span>Tagged with: </span>
+        <ul class="tag-list">
+          <li>
+            <a href="/tags/swift">swift</a>
+          </li>
+        </ul>
+      </article>
+    </div>
+    <footer>
+      <p>This website was made in Swift thanks to 
+        <a href="https://github.com/johnsundell/ink">Ink</a>, 
+        <a href="https://github.com/johnsundell/plot">Plot</a>, 
+        <a href="https://github.com/johnsundell/splash">Splash</a> &amp; 
+        <a href="https://github.com/johnsundell/publish">Publish</a> by 
+        <a class="rss" href="https://www.swiftbysundell.com">John Sundell</a>
+      </p>
+      <p>©2020 Sebastian Vieira</p>
+      <p>Subscribe via 
+        <a class="rss" href="/feed.rss">RSS</a>
+      </p>
+    </footer>
+  </body>
 </html>
